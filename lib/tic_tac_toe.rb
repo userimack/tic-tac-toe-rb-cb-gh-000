@@ -77,7 +77,7 @@ def input_to_index(user_input)
   user_input.to_i - 1
 end
 
-def move(board, index, current_player = "X")
+def move(board, index, current_player)
   board[index] = current_player
 end
 
@@ -94,7 +94,8 @@ def turn(board)
   input = gets.strip
   index = input_to_index(input)
   if valid_move?(board, index)
-    move(board, index)
+      character = current_player(board)
+      move(board, index, character)
     display_board(board)
   else
     turn(board)
@@ -103,7 +104,31 @@ end
 
 # Define your play method below
 def play(board)
-  9.times do
-    turn(board)
+    while !over?(board) do
+        turn(board)
+    end
+
+  if won?(board)
+    puts "Congratulations #{winner(board)}!"
+  elsif draw?(board)
+    puts "Cat's Game!"
   end
-end 
+
+    # won?(board) ? puts("Congratulations #{winner(board)}!") : puts("Cat's Game!")
+
+end
+
+
+def turn_count(board)
+  counter = 0
+  board.each do |place|
+    if place == "X" || place == "O"
+      counter += 1
+    end
+  end
+  counter
+end
+
+def current_player(board)
+  turn_count(board).even? ? "X" : "O"
+end
